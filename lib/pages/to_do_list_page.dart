@@ -65,7 +65,8 @@ class _TodoListListPageState extends State<TodoListListPage> {
                     shrinkWrap: true,
                     children: [
                       for (Task task in tasks)
-                        if (task.title.isNotEmpty) TodoListItem(task: task)
+                        if (task.title.isNotEmpty)
+                          TodoListItem(task: task, onDelete: onDelete),
                     ],
                   ),
                 ),
@@ -98,5 +99,11 @@ class _TodoListListPageState extends State<TodoListListPage> {
         ),
       ),
     );
+  }
+
+  void onDelete(Task task) {
+    setState(() {
+      tasks.remove(task);
+    });
   }
 }
