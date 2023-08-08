@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_to_do_list/models/task.dart';
 import 'package:flutter_to_do_list/widgets/to_do_list_item.dart';
 
 class TodoListListPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class TodoListListPage extends StatefulWidget {
 class _TodoListListPageState extends State<TodoListListPage> {
   final TextEditingController tasksController = TextEditingController();
 
-  List<String> tasks = [];
+  List<Task> tasks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,9 @@ class _TodoListListPageState extends State<TodoListListPage> {
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              tasks.add(tasksController.text);
+                              tasks.add(Task(
+                                  title: tasksController.text,
+                                  dateTime: DateTime.now()));
                               tasksController.clear();
                             });
                           },
@@ -61,8 +64,8 @@ class _TodoListListPageState extends State<TodoListListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (String text in tasks)
-                        if (text.isNotEmpty) TodoListItem(title: text)
+                      for (Task task in tasks)
+                        if (task.title.isNotEmpty) TodoListItem(task: task)
                     ],
                   ),
                 ),
