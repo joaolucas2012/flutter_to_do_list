@@ -1,8 +1,9 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_list/models/task.dart';
-import 'package:flutter_to_do_list/widgets/to_do_list_item.dart';
+import 'package:flutter_to_do_list/utils/functions/create_snackbar.dart';
+import 'package:flutter_to_do_list/widgets/add_tasks_container.dart';
+import 'package:flutter_to_do_list/widgets/pending_amount.dart';
+import 'package:flutter_to_do_list/widgets/tasks_list.dart';
 
 class TodoListListPage extends StatefulWidget {
   const TodoListListPage({Key? key}) : super(key: key);
@@ -12,8 +13,6 @@ class TodoListListPage extends StatefulWidget {
 }
 
 class _TodoListListPageState extends State<TodoListListPage> {
-  final TextEditingController tasksController = TextEditingController();
-
   List<Task> tasks = [];
 
   @override
@@ -26,73 +25,11 @@ class _TodoListListPageState extends State<TodoListListPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: tasksController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Add a task',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              tasks.add(Task(
-                                  title: tasksController.text,
-                                  dateTime: DateTime.now()));
-                              tasksController.clear();
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
-                            fixedSize: const Size(20, 45),
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            size: 20,
-                          )),
-                    )
-                  ],
-                ),
+                AddTasksContainer(tasks: tasks, addTask: addTask),
                 const SizedBox(height: 16),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      for (Task task in tasks)
-                        if (task.title.isNotEmpty)
-                          TodoListItem(task: task, onDelete: onDelete),
-                    ],
-                  ),
-                ),
+                TasksList(tasks: tasks, onDelete: onDelete),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'You have ${tasks.length} pending tasks',
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print("Clicou");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          fixedSize: const Size(125, 35),
-                        ),
-                        child: const Text('Clean all tasks'),
-                      ),
-                    ),
-                  ],
-                ),
+                PendingAmount(amount: tasks.length, deletAll: deletAll),
               ],
             ),
           ),
@@ -101,9 +38,37 @@ class _TodoListListPageState extends State<TodoListListPage> {
     );
   }
 
+  void addTask(Task task, TextEditingController controller) {
+    setState(() => tasks.add(task));
+    controller.clear();
+  }
+
   void onDelete(Task task) {
-    setState(() {
-      tasks.remove(task);
-    });
+    int index = tasks.indexOf(task);
+
+    setState(() => tasks.remove(task));
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      createSnackBar(index: index, task: task, restoreOne: restoreTask),
+    );
+  }
+
+  void restoreTask(int index, Task task) {
+    setState(() => tasks.insert(index, task));
+  }
+
+  void deletAll() {
+    List<Task> backup = List<Task>.of(tasks);
+    setState(() => tasks.clear());
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      createSnackBar(backup: backup, restoreAll: restoreAllTasks, all: true),
+    );
+  }
+
+  void restoreAllTasks(List<Task> backup) {
+    setState(() => tasks.addAll(backup));
   }
 }
