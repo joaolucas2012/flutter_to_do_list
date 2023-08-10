@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_list/models/task.dart';
+import 'package:flutter_to_do_list/repositories/tasks_repository.dart';
 import 'package:flutter_to_do_list/utils/functions/create_snackbar.dart';
 import 'package:flutter_to_do_list/widgets/add_tasks_container.dart';
 import 'package:flutter_to_do_list/widgets/pending_amount.dart';
@@ -14,6 +15,15 @@ class TodoListListPage extends StatefulWidget {
 
 class _TodoListListPageState extends State<TodoListListPage> {
   List<Task> tasks = [];
+  final TasksRepository repository = TasksRepository();
+
+  @override
+  void initState() {
+    super.initState();
+    repository.getTasksList().then((value) {
+      setState(() => tasks = value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +48,32 @@ class _TodoListListPageState extends State<TodoListListPage> {
     );
   }
 
-  void addTask(Task task, TextEditingController controller) {
-    setState(() => tasks.add(task));
+  Future<void> addTask(Task task, TextEditingController controller) async {
+    setState(() {
+      if (task.title.isNotEmpty) {
+        tasks.add(task);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            padding: const EdgeInsets.all(16),
+            margin: EdgeInsets.only(
+                left: 40,
+                right: 40,
+                bottom: MediaQuery.of(context).size.height * 0.25),
+            backgroundColor: Colors.red,
+            content: const Text(
+              "A task must have a title!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    });
+
+    repository.saveTasksList(tasks);
     controller.clear();
   }
 
@@ -47,6 +81,7 @@ class _TodoListListPageState extends State<TodoListListPage> {
     int index = tasks.indexOf(task);
 
     setState(() => tasks.remove(task));
+    repository.saveTasksList(tasks);
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -56,11 +91,13 @@ class _TodoListListPageState extends State<TodoListListPage> {
 
   void restoreTask(int index, Task task) {
     setState(() => tasks.insert(index, task));
+    repository.saveTasksList(tasks);
   }
 
   void deletAll() {
     List<Task> backup = List<Task>.of(tasks);
     setState(() => tasks.clear());
+    repository.saveTasksList(tasks);
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -70,5 +107,6 @@ class _TodoListListPageState extends State<TodoListListPage> {
 
   void restoreAllTasks(List<Task> backup) {
     setState(() => tasks.addAll(backup));
+    repository.saveTasksList(tasks);
   }
 }

@@ -34,7 +34,7 @@ class _AddTasksContainerState extends State<AddTasksContainer> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: ElevatedButton(
-              onPressed: () => widget.addTask(
+              onPressed: () async => await widget.addTask(
                     Task(
                       title: tasksController.text,
                       dateTime: DateTime.now(),
