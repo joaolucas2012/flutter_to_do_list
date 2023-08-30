@@ -4,6 +4,7 @@ import 'package:flutter_to_do_list/repositories/tasks_repository.dart';
 import 'package:flutter_to_do_list/utils/functions/create_snackbar.dart';
 import 'package:flutter_to_do_list/widgets/add_tasks_container.dart';
 import 'package:flutter_to_do_list/widgets/pending_amount.dart';
+import 'package:flutter_to_do_list/widgets/styled_title.dart';
 import 'package:flutter_to_do_list/widgets/tasks_list.dart';
 
 class TodoListListPage extends StatefulWidget {
@@ -35,6 +36,8 @@ class _TodoListListPageState extends State<TodoListListPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const StyledTitle(),
+                const SizedBox(height: 30),
                 AddTasksContainer(tasks: tasks, addTask: addTask),
                 const SizedBox(height: 16),
                 TasksList(tasks: tasks, onDelete: onDelete),
@@ -49,30 +52,7 @@ class _TodoListListPageState extends State<TodoListListPage> {
   }
 
   Future<void> addTask(Task task, TextEditingController controller) async {
-    setState(() {
-      if (task.title.isNotEmpty) {
-        tasks.add(task);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            padding: const EdgeInsets.all(16),
-            margin: EdgeInsets.only(
-                left: 40,
-                right: 40,
-                bottom: MediaQuery.of(context).size.height * 0.25),
-            backgroundColor: Colors.red,
-            content: const Text(
-              "A task must have a title!",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      }
-    });
-
+    setState(() => tasks.add(task));
     repository.saveTasksList(tasks);
     controller.clear();
   }
