@@ -40,7 +40,7 @@ class _PendingAmountState extends State<PendingAmount> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete all tasks?'),
+          title: const Text('Delete all tasks'),
           content: const Text('Do you realy want to delete all the tasks?'),
           actions: [
             TextButton(
