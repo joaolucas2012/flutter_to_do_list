@@ -1,6 +1,16 @@
 # flutter_to_do_list
 
-A new Flutter project.
+A new Flutter project that includes a list of tasks.
+
+#### The layout
+
+The following image shows the layout of the application:
+
+---
+
+![Alt text](lib/assets/layout.png)
+
+---
 
 ## Getting Started
 
