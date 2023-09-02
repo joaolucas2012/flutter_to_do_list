@@ -16,14 +16,14 @@ SnackBar createSnackBar({
     message = text;
   } else {
     message = (!all)
-        ? 'Task ${task!.title} was successfully deleted!'
+        ? 'Task "${task!.title}" was successfully deleted!'
         : 'Tasks were successfully deleted';
   }
 
   return SnackBar(
     behavior: SnackBarBehavior.floating,
-    padding: const EdgeInsets.all(16),
-    margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+    padding: const EdgeInsets.all(8),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     content: Text(
       message,
       style: const TextStyle(
@@ -39,6 +39,6 @@ SnackBar createSnackBar({
         (all) ? restoreAll!(backup) : restoreOne!(index!, task!);
       },
     ),
-    duration: const Duration(seconds: 4),
+    duration: const Duration(seconds: 7),
   );
 }

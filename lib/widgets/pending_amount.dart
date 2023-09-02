@@ -42,6 +42,7 @@ class _PendingAmountState extends State<PendingAmount> {
         return AlertDialog(
           title: const Text('Delete all tasks'),
           content: const Text('Do you realy want to delete all the tasks?'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

@@ -20,9 +20,12 @@ class TodoListItem extends StatelessWidget {
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
-          extentRatio: 0.10,
+          extentRatio: 0.30,
           children: [
             SlidableAction(
+              borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8)),
               backgroundColor: Colors.red,
               icon: Icons.delete,
               onPressed: (context) {
@@ -34,7 +37,7 @@ class TodoListItem extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(8),
             color: Colors.grey[200],
           ),
           child: Padding(

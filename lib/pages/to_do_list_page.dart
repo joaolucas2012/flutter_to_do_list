@@ -32,7 +32,7 @@ class _TodoListListPageState extends State<TodoListListPage> {
       child: Scaffold(
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
